@@ -3,6 +3,7 @@ import axios from 'axios'
 import { Link, } from 'react-router-dom'
 import { Container, Modal, Button, Icon } from 'semantic-ui-react'
 import NewDepartmentForm from './NewDepartmentForm'
+import EditDepartmentForm from './EditDepartmentForm'
 
 class Home extends React.Component {
   state = { departments: [],
@@ -23,8 +24,10 @@ class Home extends React.Component {
   }
 
   getImages = () => {
-      this.state.departments.map(d=> this.getImage(d.name, d.id))
-    }
+      this.state.departments.map(d => {
+        if (d.imageUrl === null) this.getImage(d.name, d.id)
+        })
+    }    
 
   getImage = (keyword, id) => {
     let parser = new DOMParser()  
@@ -36,33 +39,82 @@ class Home extends React.Component {
     let urlComplete = "https:" + urlNoQuotes
     console.log(urlComplete)
     let deps = this.state.departments.map(d => {
-      if (id === d.id)
-        return {...d, image: urlComplete}
+      if (id === d.id) {
+        axios.put(`/api/departments/${d.id}`, { imageUrl: urlComplete }).then(res => console.log(res)) 
+        return {...d, imageUrl: urlComplete}
+      } else {  
       return d
-      })
-    this.setState({departments: deps}) 
+      }
+      
+    })
+    this.setState({departments: deps})
     })  
+}
+
+addDepartment = ({name, description}) => {
+  axios.post('/api/departments', { name, description }).then(
+    res => {
+      this.setState({ departments: [...this.state.departments, res.data] }, () =>
+      this.getImage(name, res.data.id))
+    })
+}
+
+editDepartment = (id, name, description) => {
+  axios.put(`/api/departments/${id}`, { name, description })
+    .then(res => { let departments = 
+      this.state.departments.map(d => {
+        if (d.id === id)
+          return {id: res.data.id, name: res.data.name, description: res.data.description, imageUrl: res.data.imageUrl }
+        return d
+      })
+      this.setState({departments: departments})
+    })
+}
+
+deleteDepartment = (id) => {
+  axios.delete(`/api/departments/${id}`).then(
+    res => {
+      this.setState({departments: this.state.departments.filter(d => d.id !== id)})
+    }
+  )
 }
 
   render() {
     return(
+
       <Container>
-        {this.state.departments.map(d => (
-        <Link to={`/department/${d.id}/products`}>
-          <div key={d.id} style={styles.departments}>
-            <img style={styles.departmentImages} src={d.image} />
-            <h1 style={styles.title}>{d.name}</h1>
-          </div>
-        </Link>))}
-        <Button style={{marginLeft: "10px"}} onClick={this.openModal}><Icon name="add" />New Department</Button>
+        {this.state.departments.map(d => {
+          if (this.props.editDepartments) {
+            return (
+            <div style={styles.departments}>
+              <img style={styles.departmentImages} src={d.imageUrl} />
+              <EditDepartmentForm id={d.id} name={d.name} description={d.description} editDepartment={this.editDepartment} deleteDepartment={this.deleteDepartment} /> 
+            </div>
+            )
+          } else {
+            return(
+            <Link key={d.id} to={`/department/${d.id}/products`}>
+              <div style={styles.departments}>
+                <img style={styles.departmentImages} src={d.imageUrl} />
+                <h1 style={styles.title}>{d.name}</h1>
+              </div>
+            </Link>
+            )  
+          }
+        })}
+        <Button style={{borderRadius: 0, background: "white", color: "#212163", marginLeft: "10px"}} onClick={this.openModal}><Icon name="add" />New Department</Button>
         <Modal open={this.state.modalOpen} >
           <Modal.Header>
             New Department
           </Modal.Header>
           <Modal.Content>
-            <NewDepartmentForm closeModal={this.closeModal} />
+            <NewDepartmentForm closeModal={this.closeModal} addDepartment={this.addDepartment} />
           </Modal.Content>
         </Modal>
+        <hr />
+        <br />
+        <br />
+        <br />
       </Container>
     )
   }
@@ -75,10 +127,11 @@ const styles = {
     border: "solid 2px black",
     margin: "10px",
     height: "200px",
+    background: "white"
   },
   departmentImages: {
     height: "100%",
-    borderRight: "solid grey 30px"
+    borderRight: "solid lightgrey 30px"
   },
   title: {
     fontSize: "4em",

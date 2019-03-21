@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Button, Icon} from 'semantic-ui-react'
+import { Form, Icon } from 'semantic-ui-react'
 
 class NewDepartmentForm extends React.Component {
   state = { name: "",
@@ -11,7 +11,7 @@ class NewDepartmentForm extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    console.log("success")
+    this.props.addDepartment(this.state)
     this.props.closeModal()
   }
 

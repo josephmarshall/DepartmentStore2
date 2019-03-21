@@ -39,7 +39,7 @@ before_action :set_department, only: [:show, :update, :destroy]
   end
 
   def department_params
-    params.require(:department).permit(:name, :description)
+    params.require(:department).permit(:name, :description, :imageUrl)
   end
 
 end

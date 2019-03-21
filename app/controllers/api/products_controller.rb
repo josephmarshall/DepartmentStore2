@@ -34,7 +34,7 @@ before_action :set_product, only: [:show, :update, :destroy]
   end
 
   private
-  
+
   def set_department
     @department = Department.find(params[:department_id])  
   end
@@ -44,6 +44,6 @@ before_action :set_product, only: [:show, :update, :destroy]
   end
 
   def product_params
-    params.require(:product).permit(:name, :description, :price, :department_id)
+    params.require(:product).permit(:name, :description, :price, :imageUrl, :department_id)
   end
 end

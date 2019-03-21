@@ -1,13 +1,15 @@
 import React from 'react'
 import axios from 'axios'
 import { Container, Button, Icon} from 'semantic-ui-react'
+import { Redirect, } from 'react-router-dom'
 
 class Product extends React.Component {
 state = { id: "",
           name: "",
           description: "",
           price: "",
-          imageUrl: "" }
+          imageUrl: "",
+          }
 
   componentDidMount(){
     axios.get(`/api/departments/${this.props.match.params.department_id}/products/${this.props.match.params.id}`).then(
@@ -16,9 +18,9 @@ state = { id: "",
 
   deleteProduct = (id, department_id) => {
     axios.delete(`/api/departments/${department_id}/products/${id}`)
-    .then(
-      //redirect
-    ) 
+    .then( res => {let path = `/department/${department_id}/products`
+                    this.props.history.push(path)}) 
+    //<Redirect to={`/department/${department_id}/products`} /> ) 
   }
 
   render(){
@@ -30,7 +32,7 @@ state = { id: "",
         <h2>${this.state.price}</h2>
         <div>
           <Button><Icon color="blue" name="edit" />Edit</Button>
-          <Button onClick={this.deleteProduct(this.state.id, this.props.match.params.department_id)}><Icon color="red" name="trash" />Delete</Button>
+          <Button onClick={()=>this.deleteProduct(this.state.id, this.props.match.params.department_id)}><Icon color="red" name="trash" />Delete</Button>
         </div>
       </Container>
     )

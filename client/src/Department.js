@@ -1,7 +1,9 @@
 import React from 'react'
 import axios from 'axios'
-import { Container, } from 'semantic-ui-react'
+import { Container, Modal, Icon, Button } from 'semantic-ui-react'
 import { Link, } from 'react-router-dom'
+import NewProductForm from './NewProductForm'
+import Styled from 'styled-components'
 
 class Department extends React.Component{
   state = {
@@ -9,8 +11,17 @@ class Department extends React.Component{
           name: "",
           description: "",
           imageUrl: "",
-          products: [], 
+          products: [],
+          modalOpen: false, 
         }
+  
+  openModal = () => {
+    this.setState({modalOpen: true})
+  }
+
+  closeModal = () => {
+    this.setState({modalOpen: false})
+  }
 
   componentDidMount() {
     axios.get(`/api/departments/${this.props.match.params.id}`).then(
@@ -48,28 +59,55 @@ getImage = (keyword, id) => {
   })  
 }
 
+addProduct = ({name, description, price, imageUrl}) => {
+  const department_id = this.state.id
+  axios.post(`/api/departments/${department_id}/products`, { department_id, name, description, price, imageUrl }).then(
+    res => {
+      this.setState({ products: [...this.state.products, res.data] }, () =>
+      this.getImage(name, res.data.id))
+    })
+}
+
   render(){
     return(
       <Container style={{background: "white", padding: "20px"}}>
+        <Button style={{background: "white", border: "solid grey 2px"}} onClick={() => this.props.history.push(`/departments`)}><Icon name="arrow left" />Back</Button>
         <h1>{this.state.name}</h1>
         <h2>{this.state.description}</h2>
+        <Button style={{border: "solid 2px", borderRadius: 0, background: "white", color: "#212163"}} onClick={this.openModal}><Icon name="add" />New Product</Button>
         <div style={styles.productsList}>
           {this.state.products.map(p=>
             <Link to={`/department/${this.props.match.params.id}/products/${p.id}`}>
               <div style={styles.product}>
                 <img style={styles.productImage} src={p.imageUrl} />
                 <h3 style={styles.productTitle}>{p.name}</h3>
-                <p style={styles.productDescription}>{p.description}</p>
-                <h4 style={styles.price}>${p.price}</h4>
+                <p style={styles.productDescription}>{p.description.substring(0, 200)}</p>
+                <MyH4>${p.price}</MyH4>
               </div>
             </Link>
           )}
         </div>
+        <Modal open={this.state.modalOpen} >
+          <Modal.Header>
+            New Product
+          </Modal.Header>
+          <Modal.Content>
+            <NewProductForm closeModal={this.closeModal} addProduct={this.addProduct} />
+          </Modal.Content>
+        </Modal>
+        <br />
+        <br />
+        <br />
       </Container>
     )
   }
 }
 
+const MyH4 = Styled.h4`
+  width: 20%;
+  text-align: right;
+  margin-right: 10px;
+`
 const styles = {
   productsList: {
     display: "flex",
@@ -96,11 +134,11 @@ const styles = {
     borderRight: "solid grey 15px",
     height: "100%"
   },
-  price: {
-    width: "20%",
-    textAlign: "right",
-    marginRight: "10px"
-  }
+  // price: {
+  //   width: "20%",
+  //   textAlign: "right",
+  //   marginRight: "10px"
+  //}
 
 }
 export default Department

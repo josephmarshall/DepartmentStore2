@@ -3,7 +3,8 @@ import { Form, Icon, Button } from 'semantic-ui-react'
 
 class EditDepartmentForm extends React.Component {
   state = { name: this.props.name,
-            description: this.props.description }
+            description: this.props.description,
+            imageUrl: this.props.imageUrl }
   
   handleChange = (e) => {
     this.setState({[e.target.name]: e.target.value})
@@ -11,7 +12,7 @@ class EditDepartmentForm extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    this.props.editDepartment(this.props.id, this.state.name, this.state.description)
+    this.props.editDepartment(this.props.id, this.state.name, this.state.description, this.state.imageUrl)
   }
 
   handleDelete = (e) => this.props.deleteDepartment(this.props.id)
@@ -19,7 +20,7 @@ class EditDepartmentForm extends React.Component {
   render(){
     return(
       <Form style={{width: "100%"}} onSubmit={this.handleSubmit}>
-      <div>
+      <div style={{padding: "5px"}}>
         <input
           type="textField"
           style={styles.title}
@@ -40,6 +41,12 @@ class EditDepartmentForm extends React.Component {
             <Button inverted color="red" style={styles.deleteButton} onClick={this.handleDelete}><Icon name="trash" />Delete</Button>
           </div>
         </div>
+        <input
+        name="imageUrl"
+        placeholder="Image URL: Leave this field empty to auto-generate an image"
+        value={this.state.imageUrl}
+        onChange={this.handleChange}
+        />
       </div>
       </Form>
     )
@@ -51,13 +58,13 @@ const styles = {
     padding: "10px",
     fontSize: "2em",
     width: "95%",
-    border: "solid 1px gray",
+    border: "solid 1px lightgray",
     margin: "5px"
   },
   description: {
     width: "75%",
     padding: "10px",
-    border: "solid 1px gray",
+    border: "solid 1px lightgray",
     margin: "5px",
   },
   saveButton: {

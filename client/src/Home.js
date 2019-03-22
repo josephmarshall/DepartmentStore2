@@ -59,8 +59,8 @@ addDepartment = ({name, description}) => {
     })
 }
 
-editDepartment = (id, name, description) => {
-  axios.put(`/api/departments/${id}`, { name, description })
+editDepartment = (id, name, description, imageUrl) => {
+  axios.put(`/api/departments/${id}`, { name, description, imageUrl })
     .then(res => { let departments = 
       this.state.departments.map(d => {
         if (d.id === id)
@@ -68,6 +68,7 @@ editDepartment = (id, name, description) => {
         return d
       })
       this.setState({departments: departments})
+      this.props.toggleEditDepartments()
     })
 }
 
@@ -88,7 +89,7 @@ deleteDepartment = (id) => {
             return (
             <div style={styles.departments}>
               <img style={styles.departmentImages} src={d.imageUrl} />
-              <EditDepartmentForm id={d.id} name={d.name} description={d.description} editDepartment={this.editDepartment} deleteDepartment={this.deleteDepartment} /> 
+              <EditDepartmentForm id={d.id} name={d.name} description={d.description} imageUrl={d.imageUrl} editDepartment={this.editDepartment} deleteDepartment={this.deleteDepartment} /> 
             </div>
             )
           } else {

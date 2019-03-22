@@ -1,10 +1,12 @@
 import React from 'react'
-import { Form, Icon, Button } from 'semantic-ui-react'
+import { Form, Icon } from 'semantic-ui-react'
 
-class NewDepartmentForm extends React.Component {
-  state = { name: "",
-            description: "",
-            imageUrl: ""}
+class EditProductForm extends React.Component {
+
+  state = { name: this.props.product.name,
+            description: this.props.product.description,
+            price: this.props.product.price,
+            imageUrl: this.props.product.imageUrl }
   
   handleChange = (e) => {
     this.setState({[e.target.name]: e.target.value})
@@ -12,7 +14,7 @@ class NewDepartmentForm extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    this.props.addDepartment(this.state)
+    this.props.editProduct(this.state)
     this.props.closeModal()
   }
 
@@ -20,7 +22,7 @@ class NewDepartmentForm extends React.Component {
     return(
       <Form onSubmit={this.handleSubmit}>
         <Form.Input
-          label="Department Name"
+          label="Product Name"
           name="name"
           value={this.state.name}
           onChange={this.handleChange}
@@ -32,6 +34,12 @@ class NewDepartmentForm extends React.Component {
           value={this.state.description}
           onChange={this.handleChange}
         />
+        <Form.Input
+          label="Price"
+          name="price"
+          value={this.state.price}
+          onChange={this.handleChange}
+        />        
         <Form.Input
           label="Image URL"
           name="imageUrl"
@@ -48,4 +56,4 @@ class NewDepartmentForm extends React.Component {
   }
 }
 
-export default NewDepartmentForm
+export default EditProductForm

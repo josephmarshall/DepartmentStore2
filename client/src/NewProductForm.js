@@ -1,10 +1,11 @@
 import React from 'react'
-import { Form, Icon, Button } from 'semantic-ui-react'
+import { Form, Icon } from 'semantic-ui-react'
 
-class NewDepartmentForm extends React.Component {
+class NewProductForm extends React.Component {
   state = { name: "",
             description: "",
-            imageUrl: ""}
+            price: "",
+            imageUrL: ""}
   
   handleChange = (e) => {
     this.setState({[e.target.name]: e.target.value})
@@ -12,7 +13,7 @@ class NewDepartmentForm extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
-    this.props.addDepartment(this.state)
+    this.props.addProduct(this.state)
     this.props.closeModal()
   }
 
@@ -20,7 +21,7 @@ class NewDepartmentForm extends React.Component {
     return(
       <Form onSubmit={this.handleSubmit}>
         <Form.Input
-          label="Department Name"
+          label="Product Name"
           name="name"
           value={this.state.name}
           onChange={this.handleChange}
@@ -33,11 +34,17 @@ class NewDepartmentForm extends React.Component {
           onChange={this.handleChange}
         />
         <Form.Input
-          label="Image URL"
-          name="imageUrl"
-          placeholder="Leave this field empty to auto-generate an image"
-          value={this.state.imageUrl}
+          label="Price"
+          name="price"
+          value={this.state.price}
           onChange={this.handleChange}
+        />        
+        <Form.Input
+        label="Image URL"
+        name="imageUrl"
+        placeholder="Leave this field empty to auto-generate an image"
+        value={this.state.imageUrl}
+        onChange={this.handleChange}
         />
         <div style={{display: "flex", justifyContent: "flex-end"}}>
         <Form.Button><Icon color="green" name="checkmark" />Save</Form.Button>
@@ -48,4 +55,4 @@ class NewDepartmentForm extends React.Component {
   }
 }
 
-export default NewDepartmentForm
+export default NewProductForm

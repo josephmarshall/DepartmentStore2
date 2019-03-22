@@ -4,6 +4,11 @@ Rails.application.routes.draw do
     resources :departments do
       resources :products
     end
+
+    resources :carts do
+      resources :cart_items
+    end
+
   end  
   
 end

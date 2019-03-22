@@ -7,8 +7,6 @@ class Cart extends React.Component {
   //   this.setState({cartData: this.props.cartData})
   // }
 
-
-
   render(){
     return(
     <div style={{width: "30%", display: "flex", flexDirection: "column"}}>
@@ -27,7 +25,7 @@ class Cart extends React.Component {
         <div style={{fontSize: "1.2em", marginRight: "20px", textAlign: "right"}}>Total: ${this.props.cartData.total}</div>
       </div>
       <br />
-    <Button style={{background: "white", border: "solid grey 2px"}}><Icon name="checkout" />Proceed to Checkout</Button>
+    <Button style={{background: "white", border: "solid grey 2px"}}><Icon color="green" name="money bill alternate" />Proceed to Checkout</Button>
     </div>
     )
   }

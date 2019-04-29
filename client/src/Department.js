@@ -44,7 +44,7 @@ getImage = (keyword, id) => {
   let randElement = elementsArray[Math.floor(Math.random() * elementsArray.length)]
   if (randElement) {
     let urlNoQuotes = randElement.style.backgroundImage.split(/"/)[1]  
-    let urlComplete = "https:" + urlNoQuotes
+    let urlComplete =  urlNoQuotes
     console.log(urlComplete)
     let prods = this.state.products.map(p => {
       if (id === p.id) {

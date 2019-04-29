@@ -36,7 +36,7 @@ class Home extends React.Component {
     let elementsArray = htmlDoc.getElementsByClassName("view photo-list-photo-view requiredToShowOnServer awake")
     let randElement = elementsArray[Math.floor(Math.random() * elementsArray.length)]
     let urlNoQuotes = randElement.style.backgroundImage.split(/"/)[1]  
-    let urlComplete = "https:" + urlNoQuotes
+    let urlComplete = urlNoQuotes
     console.log(urlComplete)
     let deps = this.state.departments.map(d => {
       if (id === d.id) {
